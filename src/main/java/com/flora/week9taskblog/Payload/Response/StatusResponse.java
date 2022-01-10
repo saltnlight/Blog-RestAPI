@@ -1,6 +1,6 @@
 package com.flora.week9taskblog.Payload.Response;
 
-import com.flora.week9taskblog.Model.Comment;
+import com.flora.week9taskblog.Model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentResponse {
+public class StatusResponse {
     private String status;
-    private List<Comment> comments;
 }
