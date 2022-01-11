@@ -1,4 +1,4 @@
-package com.flora.week9taskblog.Model;
+package com.flora.week9taskblog.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

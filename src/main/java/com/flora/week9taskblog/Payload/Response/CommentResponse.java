@@ -1,6 +1,6 @@
 package com.flora.week9taskblog.Payload.Response;
 
-import com.flora.week9taskblog.Model.Comment;
+import com.flora.week9taskblog.model.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

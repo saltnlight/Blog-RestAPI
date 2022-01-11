@@ -1,9 +1,8 @@
 package com.flora.week9taskblog.Repository;
 
-import com.flora.week9taskblog.Model.User;
+import com.flora.week9taskblog.model.User;
 import com.flora.week9taskblog.Payload.Request.LoginRequest;
 import com.flora.week9taskblog.Payload.Request.RegisterRequest;
-import com.flora.week9taskblog.Service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;

@@ -1,6 +1,6 @@
 package com.flora.week9taskblog.Service.ServiceImpl;
 
-import com.flora.week9taskblog.Model.User;
+import com.flora.week9taskblog.model.User;
 import com.flora.week9taskblog.Payload.Request.LoginRequest;
 import com.flora.week9taskblog.Payload.Request.RegisterRequest;
 import com.flora.week9taskblog.Payload.Response.StatusResponse;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
