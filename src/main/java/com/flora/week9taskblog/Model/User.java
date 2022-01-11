@@ -11,6 +11,7 @@ import java.sql.Time;
 @NoArgsConstructor
 public class User {
     private Long id;
+    private String username;
     private String firstName;
     private String lastName;
     private Integer age;

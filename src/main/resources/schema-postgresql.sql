@@ -1,16 +1,17 @@
--- DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Users cascade;
 
 CREATE TABLE IF NOT EXISTS Users (
                   id serial PRIMARY KEY,
-                  firstname VARCHAR ( 50 ) UNIQUE NOT NULL,
-                  lastname VARCHAR ( 50 ) UNIQUE NOT NULL,
-                  age int NOT NULL,
+                  username VARCHAR ( 50 ) UNIQUE NOT NULL,
+                  firstname VARCHAR ( 50 ) NOT NULL,
+                  lastname VARCHAR ( 50 ) NOT NULL,
+                  age int,
                   email VARCHAR ( 255 ) UNIQUE NOT NULL,
-                  phone VARCHAR ( 255 ) UNIQUE NOT NULL,
+                  phone VARCHAR ( 255 ) UNIQUE,
                   password VARCHAR ( 50 ) NOT NULL,
-                  created_at timestamp NOT NULL,
-                  deactivated bool NOT NULL,
-                  deactivated_at timestamp NOT NULL
+                  created_at timestamp NOT NULL DEFAULT NOW(),
+                  deactivated bool NOT NULL
+--                   deactivated_at timestamp NOT NULL
 );
 
 -- VARCHAR LENGTH
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS PostLikes (
                   id serial PRIMARY KEY,
                   user_id int8 NOT NULL,
                   post_id int8 NOT NULL,
+                  FOREIGN KEY (user_id) REFERENCES Users (id),
                   FOREIGN KEY (post_id) REFERENCES Posts (id)
 );
 

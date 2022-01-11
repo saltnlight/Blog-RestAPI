@@ -1,4 +1,4 @@
-package com.flora.week9taskblog.Controller;
+package com.flora.week9taskblog.controller;
 
 import com.flora.week9taskblog.Payload.Request.CommentRequest;
 import com.flora.week9taskblog.Payload.Response.CommentResponse;
