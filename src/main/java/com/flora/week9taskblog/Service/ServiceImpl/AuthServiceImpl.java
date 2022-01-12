@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class AuthServiceImpl  implements AuthService {
     private AuthRepository authRepository;
@@ -34,7 +32,7 @@ public class AuthServiceImpl  implements AuthService {
     public ResponseEntity loginUser(LoginRequest loginRequest) {
         //validate input before sending to repo
         User user = authRepository.loginUser(loginRequest);
-        UserResponse response = new UserResponse("Successfully Login", List.of(user));
+        UserResponse response = new UserResponse("Successfully Login", user);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 }

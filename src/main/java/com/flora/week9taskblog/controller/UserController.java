@@ -1,6 +1,5 @@
 package com.flora.week9taskblog.controller;
 
-import com.flora.week9taskblog.Payload.Response.StatusResponse;
 import com.flora.week9taskblog.Payload.Response.UserResponse;
 import com.flora.week9taskblog.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ public class UserController {
     @GetMapping("/{id}/connections/{conUsername}/posts")
     public ResponseEntity viewOneConnectionPosts(@PathVariable(value = "id") Long id,
                                                  @PathVariable(value = "conUsername") String conUsername){
-        //  call this method - getOneUserPosts
         return userService.viewAllPostsFromOneConnection(id, conUsername);
     }
 

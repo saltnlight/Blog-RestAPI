@@ -3,6 +3,9 @@ package com.flora.week9taskblog.Repository;
 import com.flora.week9taskblog.Payload.Request.CommentRequest;
 import com.flora.week9taskblog.Payload.Response.AddRemoveObjResponse;
 import com.flora.week9taskblog.model.Comment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -14,7 +17,6 @@ import java.util.List;
 public class CommentRepository{
     private JdbcTemplate jdbcTemplate;
 
-//    @Autowired
     public CommentRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -29,20 +31,21 @@ public class CommentRepository{
         return result;
     }
 
-    public List<Comment> searchComment(String search) {
+    public Page<Comment> searchComment(String search, Pageable pageable) {
         var sql = "SELECT * FROM comments WHERE comments.body @@ to_tsquery(?)";
-        Object[] param = new Object[] {search};
-        return jdbcTemplate.query(sql,
+        List<Comment> comments = jdbcTemplate.query(sql,
                 BeanPropertyRowMapper.newInstance(Comment.class),
-                param);
+                new Object[] {search});
+        return new PageImpl<>(comments, pageable,3L);
     }
 
-    public List<Comment> getPostComments(Long postId) {
+    public Page<Comment> getPostComments(Long postId, Pageable pageable) {
         var sql = "SELECT * FROM comments WHERE post_id = ?";
         Object[] param = new Object[] {postId};
-        return jdbcTemplate.query(sql,
+        List<Comment> comments = jdbcTemplate.query(sql,
                 BeanPropertyRowMapper.newInstance(Comment.class),
                 param);
+        return new PageImpl<>(comments, pageable,3L);
     }
 
     public boolean likeUnlike(Long userId, Long commentId) {

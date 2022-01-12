@@ -33,15 +33,15 @@ public class CommentController {
         return commentService.createComment(commentRequest);
     }
 
-    @PutMapping("/{commentId}")
-    public CommentResponse editComment(@RequestBody CommentRequest commentRequest){
-        return new CommentResponse();
-    }
-
     @PatchMapping("/{commentId}/likes/{userId}")
     public ResponseEntity likeUnlikePost(@PathVariable(value = "userId") Long userId,
                                           @PathVariable(value = "commentId") Long commentId){
         return commentService.likeUnlikeComment(userId, commentId);
+    }
+
+    @PutMapping("/{commentId}")
+    public CommentResponse editComment(@RequestBody CommentRequest commentRequest){
+        return new CommentResponse();
     }
 
     @DeleteMapping("/{postId}/{commentId}/{userId}")

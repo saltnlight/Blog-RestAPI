@@ -4,6 +4,7 @@ import com.flora.week9taskblog.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 public class PostResponse {
     private String status;
-    private List<Post> posts;
+    private Page<Post> posts;
 }

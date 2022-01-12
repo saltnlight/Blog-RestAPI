@@ -7,16 +7,17 @@ import com.flora.week9taskblog.Repository.PostRepository;
 import com.flora.week9taskblog.Service.PostService;
 import com.flora.week9taskblog.model.Post;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PostServiceImpl implements PostService {
 
     private PostRepository postRepository;
+    private PageRequest pageable = PageRequest.of(0, 5);
 
     @Autowired
     public PostServiceImpl(PostRepository postRepository) {
@@ -33,20 +34,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity searchPostByTitle(String title) {
         String queryString = title.trim().replaceAll(" ", " & ");
-        List<Post> result = postRepository.searchPosts(queryString);
+        Page<Post> result = postRepository.searchPosts(queryString, pageable);
         PostResponse response = new PostResponse("Successful", result);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity getPostsByUserId(Long userId) {
-        PostResponse response = new PostResponse("Successful", postRepository.getUsersPosts(userId));
+        PostResponse response = new PostResponse("Successful", postRepository.getUsersPosts(userId, pageable));
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity getAllPosts() {
-        PostResponse response = new PostResponse("Successful", postRepository.getAllPosts());
+        PostResponse response = new PostResponse("Successful", postRepository.getAllPosts(pageable));
         return new ResponseEntity(response, HttpStatus.OK);
     }
 

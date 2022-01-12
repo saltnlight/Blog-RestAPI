@@ -1,24 +1,26 @@
 package com.flora.week9taskblog.Repository;
 
-import com.flora.week9taskblog.Payload.Request.PostRequest;
-import com.flora.week9taskblog.Payload.Response.AddRemoveObjResponse;
 import com.flora.week9taskblog.Payload.Response.ConnectionResponse;
 import com.flora.week9taskblog.Payload.Response.PostResponse;
 import com.flora.week9taskblog.Payload.Response.UserResponse;
 import com.flora.week9taskblog.model.Post;
 import com.flora.week9taskblog.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
 public class UserRepository {
     private JdbcTemplate jdbcTemplate;
+    private PageRequest pageable = PageRequest.of(0, 5);
 
     @Autowired
     private PostRepository postRepository;
@@ -30,19 +32,19 @@ public class UserRepository {
     public UserResponse addConnect(Long userId, String conUsername) {
         Long conId = lookUpUserIdFromUsername(conUsername);
 
-        if (conId == 0) return new UserResponse("User doesn't exists", new ArrayList<>());
+        if (conId == 0) return new UserResponse("User doesn't exists", new User());
 
         if (!connectionExists(userId, conId)) {
             jdbcTemplate.update(
                     "INSERT INTO connections (user_id, connection_id) VALUES (?, ?)",
                     new Object[]{userId, conId}
             );
-            return new UserResponse("Connection created", List.of(getUserById(conId)));
+            return new UserResponse("Connection created", getUserById(conId));
         }
-        return new UserResponse("Connection already exists", List.of(getUserById(conId)));
+        return new UserResponse("Connection already exists", getUserById(conId));
     }
 
-    public List<User> getAllConnections(Long userId){
+    public Page<User> getAllConnections(Long userId, Pageable pageable){
         List<Long> listUserId = getUserConnectionsIds(userId);
         List<User> users = listUserId.stream().map(id -> {
             return jdbcTemplate.queryForObject(
@@ -52,23 +54,23 @@ public class UserRepository {
             );
         }).collect(Collectors.toList());
 
-        return users;
+        return new PageImpl<>(users, pageable,3L);
     }
 
     public PostResponse getOneConnectionPosts(Long userId, String conUsername){
         Long conId = lookUpUserIdFromUsername(conUsername);
-        if (conId <= 0) return new PostResponse("User doesn't exists", new ArrayList<>());
+        if (conId <= 0) return new PostResponse("User doesn't exists", null);
 
         boolean connExists = connectionExists(userId, conId);
-        if (conId >= 1 && connExists) return new PostResponse("Found", postRepository.getUsersPosts(conId));
+        if (conId >= 1 && connExists) return new PostResponse("Found", postRepository.getUsersPosts(conId, pageable));
 
-        return new PostResponse("User isn't your connection", postRepository.getUsersPosts(conId));
+        return new PostResponse("User isn't your connection", postRepository.getUsersPosts(conId, pageable));
     }
 
-    public List<List<Post>> getAllConnectionsPosts(Long userId){
+    public List<Page<Post>> getAllConnectionsPosts(Long userId){
         List<Long> listUserId = getUserConnectionsIds(userId);
-        List<List<Post>> connPosts = listUserId.stream().map(id -> {
-            return postRepository.getUsersPosts(id);
+        List<Page<Post>> connPosts = listUserId.stream().map(id -> {
+            return postRepository.getUsersPosts(id, pageable);
         }).collect(Collectors.toList());
 
         return connPosts;
