@@ -27,8 +27,8 @@ public class AppExceptions extends ResponseEntityExceptionHandler {
         return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = {DataAccessException.class, IncorrectResultSizeDataAccessException.class})
-    public ResponseEntity handleJDBCQueryForObjectException(Exception ex){
+    @ExceptionHandler(value = {IncorrectResultSizeDataAccessException.class})
+    public ResponseEntity handleJDBCQueryForObjectException(IncorrectResultSizeDataAccessException ex){
         String errorMsgDesc = ex.getLocalizedMessage();
         if (errorMsgDesc == null) errorMsgDesc = "cannot perform an queryForObject operation";
         ErrorMessage errorMessage = new ErrorMessage(new Date(), errorMsgDesc);

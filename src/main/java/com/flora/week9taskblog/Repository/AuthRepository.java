@@ -24,13 +24,13 @@ public class AuthRepository extends JdbcDaoSupport {
 
     public int registerUser(RegisterRequest registerRequest) {
         String sql = "INSERT INTO users " +
-                "(username, firstName, lastName, email, age, password) " +
-                "VALUES (?, ?, ?, ?, ?, ?)" ;
+                "(username, firstName, lastName, email, age, password, deactivated) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)" ;
 
         int result = getJdbcTemplate().update(sql, new Object[]{
                 registerRequest.getUsername(),registerRequest.getFirstName(),
                 registerRequest.getLastName(), registerRequest.getEmail(),
-                registerRequest.getAge(), registerRequest.getPassword()
+                registerRequest.getAge(), registerRequest.getPassword(), registerRequest.getDeactivated()
         });
 
         return result;
