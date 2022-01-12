@@ -26,11 +26,11 @@ class Week9TaskBlogApplicationTests {
     @Mock
     private UserRepository mockedUserRepository;
 
-    void userShouldConnectWithOtherUsers(){
-        when(mockedUserRepository.addConnect(4l,"amy"))
-                .thenReturn(userResponse);
-
-    }
+//    void userShouldConnectWithOtherUsers(){
+//        when(mockedUserRepository.addConnect(4l,"amy"))
+//                .thenReturn(userResponse);
+//
+//    }
 
     void userShouldViewConnectionPost(){
 
