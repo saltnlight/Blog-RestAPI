@@ -17,8 +17,8 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private PageRequest pageable = PageRequest.of(0, 5);
+    private final UserRepository userRepository;
+    private final PageRequest pageable = PageRequest.of(0, 5);
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {

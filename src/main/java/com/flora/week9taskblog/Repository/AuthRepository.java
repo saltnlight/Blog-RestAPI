@@ -27,11 +27,9 @@ public class AuthRepository extends JdbcDaoSupport {
                 "(username, firstName, lastName, email, age, password, deactivated) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)" ;
 
-        int result = getJdbcTemplate().update(sql, new Object[]{
-                registerRequest.getUsername(),registerRequest.getFirstName(),
+        int result = getJdbcTemplate().update(sql, registerRequest.getUsername(),registerRequest.getFirstName(),
                 registerRequest.getLastName(), registerRequest.getEmail(),
-                registerRequest.getAge(), registerRequest.getPassword(), registerRequest.getDeactivated()
-        });
+                registerRequest.getAge(), registerRequest.getPassword(), registerRequest.getDeactivated());
 
         return result;
     }

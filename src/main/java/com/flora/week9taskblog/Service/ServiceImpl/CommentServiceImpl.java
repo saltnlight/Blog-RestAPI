@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-    private CommentRepository commentRepository;
-    private PageRequest pageable = PageRequest.of(0, 5);
+    private final CommentRepository commentRepository;
+    private final PageRequest pageable = PageRequest.of(0, 5);
 
     @Autowired
     public CommentServiceImpl(CommentRepository commentRepository) {

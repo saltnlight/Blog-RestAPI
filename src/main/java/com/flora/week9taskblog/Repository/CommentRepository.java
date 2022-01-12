@@ -15,7 +15,7 @@ import java.util.List;
 
 @Repository
 public class CommentRepository{
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public CommentRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -24,9 +24,7 @@ public class CommentRepository{
     public int saveComment(CommentRequest commentRequest) {
         String sql = "INSERT INTO comments " + "(body, user_id, post_id) " + "VALUES (?, ?, ?)" ;
 
-        int result = jdbcTemplate.update(sql, new Object[]{
-                commentRequest.getBody(),commentRequest.getUserId(),commentRequest.getPostId()
-        });
+        int result = jdbcTemplate.update(sql, commentRequest.getBody(),commentRequest.getUserId(),commentRequest.getPostId());
 
         return result;
     }
@@ -35,7 +33,7 @@ public class CommentRepository{
         var sql = "SELECT * FROM comments WHERE comments.body @@ to_tsquery(?)";
         List<Comment> comments = jdbcTemplate.query(sql,
                 BeanPropertyRowMapper.newInstance(Comment.class),
-                new Object[] {search});
+                search);
         return new PageImpl<>(comments, pageable,3L);
     }
 
@@ -52,17 +50,17 @@ public class CommentRepository{
         List<AddRemoveObjResponse> response = jdbcTemplate.query(
                 "SELECT * FROM commentlikes WHERE user_id = ? AND comment_id = ?",
                 BeanPropertyRowMapper.newInstance(AddRemoveObjResponse.class),
-                new Object[]{userId, commentId});
+                userId, commentId);
 
         if (response.isEmpty() || response == null){
             jdbcTemplate.update("INSERT INTO  commentlikes" + "(user_id, comment_id) " +
                             "VALUES (?, ?)",
-                    new Object[]{userId, commentId});
+                    userId, commentId);
             return true;
         }
 
         jdbcTemplate.update("DELETE from commentlikes WHERE user_id = ? AND comment_id = ?",
-                new Object[] { userId, commentId });
+                userId, commentId);
         return false;
     }
 }

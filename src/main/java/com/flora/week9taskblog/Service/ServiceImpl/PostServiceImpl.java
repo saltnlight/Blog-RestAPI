@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostServiceImpl implements PostService {
 
-    private PostRepository postRepository;
-    private PageRequest pageable = PageRequest.of(0, 5);
+    private final PostRepository postRepository;
+    private final PageRequest pageable = PageRequest.of(0, 5);
 
     @Autowired
     public PostServiceImpl(PostRepository postRepository) {

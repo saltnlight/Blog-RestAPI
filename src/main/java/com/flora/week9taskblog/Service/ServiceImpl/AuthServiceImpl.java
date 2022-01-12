@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl  implements AuthService {
-    private AuthRepository authRepository;
+    private final AuthRepository authRepository;
 
     @Autowired
     public AuthServiceImpl(AuthRepository authRepository) {

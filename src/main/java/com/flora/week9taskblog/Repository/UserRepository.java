@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 @Repository
 public class UserRepository {
-    private JdbcTemplate jdbcTemplate;
-    private PageRequest pageable = PageRequest.of(0, 5);
+    private final JdbcTemplate jdbcTemplate;
+    private final PageRequest pageable = PageRequest.of(0, 5);
 
     @Autowired
     private PostRepository postRepository;
@@ -37,8 +37,7 @@ public class UserRepository {
         if (!connectionExists(userId, conId)) {
             jdbcTemplate.update(
                     "INSERT INTO connections (user_id, connection_id) VALUES (?, ?)",
-                    new Object[]{userId, conId}
-            );
+                    userId, conId);
             return new UserResponse("Connection created", getUserById(conId));
         }
         return new UserResponse("Connection already exists", getUserById(conId));
@@ -50,8 +49,7 @@ public class UserRepository {
             return jdbcTemplate.queryForObject(
                     "SELECT * FROM users WHERE id = ?",
                     BeanPropertyRowMapper.newInstance(User.class),
-                    new Object[]{id}
-            );
+                    id);
         }).collect(Collectors.toList());
 
         return new PageImpl<>(users, pageable,3L);
@@ -80,15 +78,14 @@ public class UserRepository {
         return jdbcTemplate.queryForObject(
                 "SELECT * FROM users WHERE id = ?",
                 BeanPropertyRowMapper.newInstance(User.class),
-                new Object[] {id});
+                id);
     }
 
     private List<Long> getUserConnectionsIds(Long userId){
         List<ConnectionResponse> list = jdbcTemplate.query(
                 "SELECT * FROM connections WHERE connections.user_id = ?",
                 BeanPropertyRowMapper.newInstance(ConnectionResponse.class),
-                new Object[] {userId}
-        );
+                userId);
         return list.stream().map(i -> {
             return i.getConnection_id();
         }).collect(Collectors.toList());
@@ -104,8 +101,7 @@ public class UserRepository {
         List<User> users = jdbcTemplate.query(
                 "SELECT * FROM users WHERE username = ?",
                 BeanPropertyRowMapper.newInstance(User.class),
-                new Object[] {username}
-        );
+                username);
         if (users == null || users.isEmpty()) return 0L;
 
         return users.get(0).getId();
@@ -121,9 +117,7 @@ public class UserRepository {
         List<ConnectionResponse> response = jdbcTemplate.query(
                 "SELECT * FROM connections WHERE user_id = ? AND connection_id = ?",
                 BeanPropertyRowMapper.newInstance(ConnectionResponse.class),
-                new Object[]{userId, conId}
-        );
-        if (response.isEmpty()) return false;
-        return true;
+                userId, conId);
+        return !response.isEmpty();
     }
 }

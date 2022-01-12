@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 public class PostRepository{
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public PostRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -23,9 +23,7 @@ public class PostRepository{
     public int savePost(Long userId, PostRequest postRequest) {
         String sql = "INSERT INTO posts (title, body, user_id) VALUES (?, ?, ?)";
 
-        int result = jdbcTemplate.update(sql, new Object[]{
-                postRequest.getTitle(),postRequest.getBody(),userId
-        });
+        int result = jdbcTemplate.update(sql, postRequest.getTitle(),postRequest.getBody(),userId);
 
         return result;
     }
@@ -34,7 +32,7 @@ public class PostRepository{
         List<Post> posts = jdbcTemplate.query(
                 "SELECT * FROM posts WHERE user_id = ?",
                 BeanPropertyRowMapper.newInstance(Post.class),
-                new Object[] {userId});
+                userId);
         return new PageImpl<>(posts, pageable,3L);
     }
 
@@ -66,13 +64,13 @@ public class PostRepository{
             String sqlInsert = "INSERT INTO  favouriteposts" + "(user_id, post_id) " +
                             "VALUES (?, ?)" ;
 
-            jdbcTemplate.update(sqlInsert, new Object[]{userId, postId});
+            jdbcTemplate.update(sqlInsert, userId, postId);
             return true;
         }
 
         // else, unlike
         jdbcTemplate.update("DELETE from favouriteposts WHERE user_id = ? AND post_id = ?",
-                        new Object[] { userId, postId });
+                userId, postId);
         return false;
     }
 
@@ -81,17 +79,17 @@ public class PostRepository{
         List<AddRemoveObjResponse> response = jdbcTemplate.query(
                 sql,
                 BeanPropertyRowMapper.newInstance(AddRemoveObjResponse.class),
-                new Object[]{userId, postId});
+                userId, postId);
 
         if (response.isEmpty() || response == null){
             jdbcTemplate.update("INSERT INTO  postlikes" + "(user_id, post_id) " +
                                         "VALUES (?, ?)",
-                                    new Object[]{userId, postId});
+                    userId, postId);
             return true;
         }
 
         jdbcTemplate.update("DELETE from postlikes WHERE user_id = ? AND post_id = ?",
-                                new Object[] { userId, postId });
+                userId, postId);
         return false;
     }
 }
