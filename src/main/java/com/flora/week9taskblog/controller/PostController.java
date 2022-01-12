@@ -3,6 +3,9 @@ package com.flora.week9taskblog.controller;
 import com.flora.week9taskblog.Payload.Request.PostRequest;
 import com.flora.week9taskblog.Payload.Response.PostResponse;
 import com.flora.week9taskblog.Payload.Response.StatusResponse;
+import com.flora.week9taskblog.Service.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
@@ -10,42 +13,44 @@ import org.springframework.data.domain.Pageable;
 @RequestMapping("/posts")
 public class PostController {
 
+    @Autowired
+    private PostService postService;
+
     @GetMapping("/search")
-    public PostResponse searchPostTitle(@RequestParam(value = "blog_title") String title){
-        return new PostResponse();
+    public ResponseEntity searchPostTitle(@RequestParam(value = "blog_title") String title){
+        return postService.searchPostByTitle(title);
     }
 
     @GetMapping
-    public PostResponse getAllUsersPosts(Pageable pageable){
-        return new PostResponse();
+    public ResponseEntity getAllUsersPosts(Pageable pageable){
+        return postService.getAllPosts();
     }
 
     @GetMapping("/{userId}")
-    public PostResponse getOneUserPosts(){
-        return new PostResponse();
+    public ResponseEntity getOneUserPosts(@PathVariable Long userId){
+        return postService.getPostsByUserId(userId);
     }
 
     @PostMapping("/{userId}")
-    public PostResponse createPost(@RequestBody PostRequest postRequest){
-        return new PostResponse();
+    public ResponseEntity createPost(@PathVariable Long userId,
+                                     @RequestBody PostRequest postRequest){
+
+        return postService.createPost(userId, postRequest);
     }
 
     @PutMapping("/{postId}/{userId}")
-    public PostResponse editPost(@RequestBody PostRequest postRequest){
-        return new PostResponse();
-    }
+    public PostResponse editPost(@RequestBody PostRequest postRequest){return new PostResponse();}
 
     @PatchMapping("/{postId}/{userId}")
-    public PostResponse favoritePost(){
-        return new PostResponse();
+    public ResponseEntity favoritePost(@PathVariable Long userId, @PathVariable Long postId){
+        return postService.addRemovePostToFavorite(userId, postId);
     }
 
-    @PatchMapping("/{postId}/likes/{userId}/")
-    public PostResponse likeUnlikePost(){
-        return new PostResponse();
+    @PatchMapping("/{postId}/likes/{userId}")
+    public ResponseEntity likeUnlikePost(@PathVariable Long userId, @PathVariable Long postId){
+        return postService.likeUnlikePost(userId, postId);
     }
 
-//    is it better to send a body with a delete request
     @DeleteMapping("/{postId}/{userId}")
     public StatusResponse deletePost(){
         return new StatusResponse();

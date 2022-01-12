@@ -12,5 +12,4 @@ public class Post {
     private Long userId;
     private String title;
     private String body;
-    private Boolean favorite;
 }
