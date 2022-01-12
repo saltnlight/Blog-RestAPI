@@ -9,9 +9,10 @@ CREATE TABLE IF NOT EXISTS Users (
                   phone VARCHAR ( 255 ) UNIQUE,
                   password VARCHAR ( 50 ) NOT NULL,
                   created_at timestamp NOT NULL DEFAULT NOW(),
-                  deactivated bool NOT NULL
+                  deactivated bool NOT NULL,
+                  deactivated_at timestamp NULL
 );
-
+-- alter table users ADD COLUMN deactivated_at timestamp NULL;
 -- DROP TABLE IF EXISTS Connections;
 CREATE TABLE IF NOT EXISTS Connections (
                                            id serial PRIMARY KEY,

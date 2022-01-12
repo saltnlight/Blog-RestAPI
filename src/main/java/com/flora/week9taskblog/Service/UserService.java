@@ -24,4 +24,8 @@ public interface UserService {
      * @return*/
     ResponseEntity viewAllPostsFromAllConnections(Long userId);
 
+     ResponseEntity activateDeactivateAccount(String username);
+
+     void deleteAccount();
+
 }

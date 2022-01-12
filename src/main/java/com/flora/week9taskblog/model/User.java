@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -20,5 +21,5 @@ public class User {
     private String password;
     private Time created_at;
     private Boolean deactivated;
-    private Time deactivated_at;
+    private Timestamp deactivated_at;
 }

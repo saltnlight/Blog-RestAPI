@@ -11,8 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.SystemPropertyUtils;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -51,5 +55,34 @@ public class UserServiceImpl implements UserService {
         List<Page<Post>> connPosts = userRepository.getAllConnectionsPosts(userId);
         if (connPosts.isEmpty()) return new ResponseEntity("No Posts Found", HttpStatus.NO_CONTENT);
         return new ResponseEntity(connPosts, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity activateDeactivateAccount(String username) {
+        Long id = userRepository.lookUpUserIdFromUsername(username);
+        User user = userRepository.getUserById(id);
+        if (user.getDeactivated().equals(false)){
+            // deactivate user
+            user.setDeactivated(true);
+            user.setDeactivated_at(Timestamp.valueOf(LocalDateTime.now()));
+            userRepository.saveUser(user);
+        }else{
+            // activate user
+            user.setDeactivated(false);
+            userRepository.saveUser(user);
+        }
+        return new ResponseEntity(null, HttpStatus.OK);
+    }
+
+    @Override
+    @Scheduled(cron = "0 */2 * * * ?")
+    public void deleteAccount() {
+        List<User> users = userRepository.getAllUsers();
+        users.forEach(user->{
+            if (user.getDeactivated() &&  System.currentTimeMillis() - user.getDeactivated_at().getTime() >= 120 ){
+//                userRepository.deleteUserById(user.getId());
+                System.out.println("Deleted Successfully");
+            }
+        });
     }
 }

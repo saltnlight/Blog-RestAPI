@@ -1,5 +1,6 @@
 package com.flora.week9taskblog.Repository;
 
+import com.flora.week9taskblog.Payload.Request.RegisterRequest;
 import com.flora.week9taskblog.Payload.Response.ConnectionResponse;
 import com.flora.week9taskblog.Payload.Response.PostResponse;
 import com.flora.week9taskblog.Payload.Response.UserResponse;
@@ -27,6 +28,18 @@ public class UserRepository {
 
     public UserRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public int saveUser(User user) {
+        String sql = "UPDATE users " +
+                "SET username=?, firstName=?, lastName=?, email=?, age=?, password=?, deactivated=?, deactivated_at=?" +
+                "WHERE id = ?" ;
+
+        int result = jdbcTemplate.update(sql, user.getUsername(),user.getFirstName(), user.getLastName(),
+                user.getEmail(), user.getAge(), user.getPassword(), user.getDeactivated(), user.getDeactivated_at(),
+                user.getId());
+
+        return result;
     }
 
     public UserResponse addConnect(Long userId, String conUsername) {
@@ -74,11 +87,16 @@ public class UserRepository {
         return connPosts;
     }
 
-    private User getUserById(Long id){
+    public User getUserById(Long id){
         return jdbcTemplate.queryForObject(
                 "SELECT * FROM users WHERE id = ?",
                 BeanPropertyRowMapper.newInstance(User.class),
                 id);
+    }
+
+    public List<User> getAllUsers() {
+        var sql = "SELECT * FROM users";
+        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(User.class));
     }
 
     private List<Long> getUserConnectionsIds(Long userId){
@@ -91,7 +109,7 @@ public class UserRepository {
         }).collect(Collectors.toList());
     }
 
-    private Long lookUpUserIdFromUsername(String username){
+    public Long lookUpUserIdFromUsername(String username){
         Integer rows = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM users",Integer.class,
                 new Object[]{}

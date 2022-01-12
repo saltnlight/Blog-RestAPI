@@ -34,8 +34,8 @@ public class UserController {
         return userService.viewAllPostsFromAllConnections(id);
     }
 
-    @PatchMapping("/{username}")
-    public UserResponse activateDeactivateAccount(){
-        return new UserResponse();
+    @GetMapping("/{username}")
+    public ResponseEntity activateDeactivateAccount(@PathVariable String username){
+        return userService.activateDeactivateAccount(username);
     }
 }
