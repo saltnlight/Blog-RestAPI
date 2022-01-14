@@ -87,20 +87,21 @@ public class UserServiceImpl implements UserService {
             user.setDeactivated(true);
             user.setDeactivated_at(Timestamp.valueOf(LocalDateTime.now()));
             userRepository.saveUser(user);
-        }else{
-            // activate user
-            user.setDeactivated(false);
-            userRepository.saveUser(user);
+            return new ResponseEntity("Your account has been deactivated", HttpStatus.OK);
         }
-        return new ResponseEntity(null, HttpStatus.OK);
+        // activate user
+        user.setDeactivated(false);
+        userRepository.saveUser(user);
+        return new ResponseEntity("Your account has been activated", HttpStatus.OK);
     }
 
     @Override
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 0/2 * * * ?")
+//    @Scheduled(cron = "0 */2 * * * ?")
     public void deleteAccount() {
         List<User> users = userRepository.getAllUsers();
         users.forEach(user->{
-            if (user.getDeactivated() &&  System.currentTimeMillis() - user.getDeactivated_at().getTime() >= 120 ){
+            if (user.getDeactivated() &&  System.currentTimeMillis() - user.getDeactivated_at().getTime() >= 60 ){
                 userRepository.deleteUserById(user.getId());
                 System.out.println("Deleted Successfully");
             }

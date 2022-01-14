@@ -47,6 +47,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseEntity getAllPosts() {
+        //handle possible 0 posts in db w/optional
         PostResponse response = new PostResponse("Successful", postRepository.getAllPosts(pageable));
         return new ResponseEntity(response, HttpStatus.OK);
     }

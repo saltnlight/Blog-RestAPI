@@ -1,4 +1,4 @@
--- DROP TABLE IF EXISTS Users cascade;
+DROP TABLE IF EXISTS Users cascade;
 CREATE TABLE IF NOT EXISTS Users (
                   id serial PRIMARY KEY,
                   username VARCHAR ( 50 ) UNIQUE NOT NULL,
@@ -12,62 +12,61 @@ CREATE TABLE IF NOT EXISTS Users (
                   deactivated bool NOT NULL,
                   deactivated_at timestamp NULL
 );
--- alter table users ADD COLUMN deactivated_at timestamp NULL;
--- DROP TABLE IF EXISTS Connections;
+
+DROP TABLE IF EXISTS Connections;
 CREATE TABLE IF NOT EXISTS Connections (
-                                           id serial PRIMARY KEY,
-                                           user_id int8 NOT NULL,
-                                           connection_id int8 NOT NULL,
-                                           created_at timestamp NOT NULL DEFAULT NOW(),
-                                           FOREIGN KEY (user_id) REFERENCES Users (id),
-                                           FOREIGN KEY (connection_id) REFERENCES Users (id)
+                   id serial PRIMARY KEY,
+                   user_id int8 NOT NULL,
+                   connection_id int8 NOT NULL,
+                   created_at timestamp NOT NULL DEFAULT NOW(),
+                   FOREIGN KEY (user_id) REFERENCES Users (id) on delete cascade,
+                   FOREIGN KEY (connection_id) REFERENCES Users (id) on delete cascade
 );
 
--- DROP TABLE IF EXISTS Posts cascade;
--- VARCHAR LENGTH
+DROP TABLE IF EXISTS Posts cascade;
 CREATE TABLE IF NOT EXISTS Posts (
                   id serial PRIMARY KEY,
                   user_id int8 NOT NULL,
                   title VARCHAR ( 50 ) NOT NULL,
                   body VARCHAR ( 255 ) NOT NULL,
                   created_at timestamp NOT NULL DEFAULT NOW(),
-                  FOREIGN KEY (user_id) REFERENCES Users (id)
+                  FOREIGN KEY (user_id) REFERENCES Users (id) on delete cascade
 );
 
--- DROP TABLE IF EXISTS PostLikes;
+DROP TABLE IF EXISTS PostLikes;
 CREATE TABLE IF NOT EXISTS PostLikes (
                   id serial PRIMARY KEY,
                   user_id int8 NOT NULL,
                   post_id int8 NOT NULL,
-                  FOREIGN KEY (user_id) REFERENCES Users (id),
-                  FOREIGN KEY (post_id) REFERENCES Posts (id)
+                  FOREIGN KEY (user_id) REFERENCES Users (id) on delete cascade,
+                  FOREIGN KEY (post_id) REFERENCES Posts (id) on delete cascade
 );
 
--- DROP TABLE IF EXISTS FavouritePosts;
+DROP TABLE IF EXISTS FavouritePosts;
 CREATE TABLE IF NOT EXISTS FavouritePosts (
                   id serial PRIMARY KEY,
                   user_id int8 NOT NULL,
                   post_id int8 NOT NULL,
-                  FOREIGN KEY (user_id) REFERENCES Users (id),
+                  FOREIGN KEY (user_id) REFERENCES Users (id) on delete cascade,
                   FOREIGN KEY (post_id) REFERENCES Posts (id)
 );
 
--- DROP TABLE IF EXISTS Comments cascade;
+DROP TABLE IF EXISTS Comments cascade;
 CREATE TABLE IF NOT EXISTS Comments (
                  id serial PRIMARY KEY,
                  user_id int8 NOT NULL,
                  post_id int8 NOT NULL,
                  body VARCHAR ( 50 ) NOT NULL,
                  created_at timestamp NOT NULL DEFAULT NOW(),
-                 FOREIGN KEY (user_id) REFERENCES Users (id),
-                 FOREIGN KEY (post_id) REFERENCES Posts (id)
+                 FOREIGN KEY (user_id) REFERENCES Users (id) on delete cascade,
+                 FOREIGN KEY (post_id) REFERENCES Posts (id) on delete cascade
 );
 
--- DROP TABLE IF EXISTS CommentLikes;
+DROP TABLE IF EXISTS CommentLikes;
 CREATE TABLE IF NOT EXISTS CommentLikes (
                  id serial PRIMARY KEY,
                  user_id int8 NOT NULL,
                  comment_id int8 NOT NULL,
-                 FOREIGN KEY (user_id) REFERENCES Users (id),
-                 FOREIGN KEY (comment_id) REFERENCES Comments (id)
+                 FOREIGN KEY (user_id) REFERENCES Users (id) on delete cascade,
+                 FOREIGN KEY (comment_id) REFERENCES Comments (id) on delete cascade
 );

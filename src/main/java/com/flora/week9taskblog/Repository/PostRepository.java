@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +16,15 @@ import java.util.List;
 @Repository
 public class PostRepository{
     private final JdbcTemplate jdbcTemplate;
+
+    RowMapper<Post> rowMapper = (rs, rowNum) -> {
+        Post post = new Post();
+        post.setId(rs.getLong("id"));
+        post.setUserId(rs.getLong("user_id"));
+        post.setTitle(rs.getString("title"));
+        post.setBody(rs.getString("body"));
+        return post;
+    };
 
     public PostRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -30,24 +40,20 @@ public class PostRepository{
 
     public Page<Post> getUsersPosts(Long userId, Pageable pageable) {
         List<Post> posts = jdbcTemplate.query(
-                "SELECT * FROM posts WHERE user_id = ?",
-                BeanPropertyRowMapper.newInstance(Post.class),
-                userId);
+                "SELECT * FROM posts WHERE user_id = ?",rowMapper, userId);
         return new PageImpl<>(posts, pageable,3L);
     }
 
     public Page<Post> getAllPosts(Pageable pageable) {
         var sql = "SELECT * FROM posts";
-        List<Post> posts = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Post.class));
+        List<Post> posts = jdbcTemplate.query(sql, rowMapper);
         return new PageImpl<>(posts, pageable,3L);
     }
 
     public Page<Post> searchPosts(String search, Pageable pageable) {
         var sql = "SELECT * FROM posts WHERE title @@ to_tsquery(?)";
         Object[] param = new Object[] {search};
-        List<Post> posts = jdbcTemplate.query(sql,
-                BeanPropertyRowMapper.newInstance(Post.class),
-                param);
+        List<Post> posts = jdbcTemplate.query(sql, rowMapper, param);
         return new PageImpl<>(posts, pageable, 3L);
     }
 

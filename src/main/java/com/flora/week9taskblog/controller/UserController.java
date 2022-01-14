@@ -1,6 +1,5 @@
 package com.flora.week9taskblog.controller;
 
-import com.flora.week9taskblog.Payload.Response.UserResponse;
 import com.flora.week9taskblog.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
