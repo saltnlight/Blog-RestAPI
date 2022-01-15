@@ -4,17 +4,18 @@ import com.flora.week9taskblog.Payload.Request.PostRequest;
 import com.flora.week9taskblog.Payload.Response.PostResponse;
 import com.flora.week9taskblog.Payload.Response.StatusResponse;
 import com.flora.week9taskblog.Service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/posts")
+@RequiredArgsConstructor
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
+
 
     @GetMapping("/search")
     public ResponseEntity searchPostTitle(@RequestParam(value = "blog_title") String title){
