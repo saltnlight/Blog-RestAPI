@@ -14,5 +14,5 @@ public class RegisterRequest {
     private Integer age;
     private String email;
     private String password;
-    private Boolean deactivated = false;
+    private Boolean deactivated = true;
 }

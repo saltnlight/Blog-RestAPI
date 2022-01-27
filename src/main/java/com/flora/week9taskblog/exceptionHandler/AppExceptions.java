@@ -6,6 +6,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -31,6 +32,14 @@ public class AppExceptions extends ResponseEntityExceptionHandler {
     public ResponseEntity handleJDBCQueryForObjectException(IncorrectResultSizeDataAccessException ex){
         String errorMsgDesc = ex.getLocalizedMessage();
         if (errorMsgDesc == null) errorMsgDesc = "cannot perform an queryForObject operation";
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), errorMsgDesc);
+        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {BadCredentialsException.class})
+    public ResponseEntity badCredentialsException(IncorrectResultSizeDataAccessException ex){
+        String errorMsgDesc = ex.getLocalizedMessage();
+        if (errorMsgDesc == null) errorMsgDesc = "Invalid username or password";
         ErrorMessage errorMessage = new ErrorMessage(new Date(), errorMsgDesc);
         return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
     }

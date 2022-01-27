@@ -1,12 +1,8 @@
 package com.flora.week9taskblog.Repository;
 
-import com.flora.week9taskblog.Payload.Request.RegisterRequest;
 import com.flora.week9taskblog.Payload.Response.ConnectionResponse;
-import com.flora.week9taskblog.Payload.Response.PostResponse;
 import com.flora.week9taskblog.Payload.Response.UserResponse;
-import com.flora.week9taskblog.model.Post;
 import com.flora.week9taskblog.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -29,11 +25,11 @@ public class UserRepository {
 
     public int saveUser(User user) {
         String sql = "UPDATE users " +
-                "SET username=?, firstName=?, lastName=?, email=?, age=?, password=?, deactivated=?, deactivated_at=?" +
+                "SET username=?, firstName=?, lastName=?, email=?, age=?, password=?, enabled=?, deactivated_at=?" +
                 "WHERE id = ?" ;
 
         int result = jdbcTemplate.update(sql, user.getUsername(),user.getFirstName(), user.getLastName(),
-                user.getEmail(), user.getAge(), user.getPassword(), user.getDeactivated(), user.getDeactivated_at(),
+                user.getEmail(), user.getAge(), user.getPassword(), user.getEnabled(), user.getDeactivated_at(),
                 user.getId());
 
         return result;
@@ -95,7 +91,7 @@ public class UserRepository {
                 BeanPropertyRowMapper.newInstance(User.class),
                 username);
         if (users == null || users.isEmpty()) return 0L;
-
+//        System.out.println(users.get(0));
         return users.get(0).getId();
     }
 

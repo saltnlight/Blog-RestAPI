@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS Users cascade;
-CREATE TABLE IF NOT EXISTS Users (
+DROP TABLE IF EXISTS users cascade;
+CREATE TABLE IF NOT EXISTS users (
                   id serial PRIMARY KEY,
                   username VARCHAR ( 50 ) UNIQUE NOT NULL,
                   firstname VARCHAR ( 50 ) NOT NULL,
@@ -9,12 +9,12 @@ CREATE TABLE IF NOT EXISTS Users (
                   phone VARCHAR ( 255 ) UNIQUE,
                   password VARCHAR ( 50 ) NOT NULL,
                   created_at timestamp NOT NULL DEFAULT NOW(),
-                  deactivated bool NOT NULL,
+                  enabled bool NOT NULL,
                   deactivated_at timestamp NULL
 );
 
-DROP TABLE IF EXISTS Connections;
-CREATE TABLE IF NOT EXISTS Connections (
+DROP TABLE IF EXISTS connections;
+CREATE TABLE IF NOT EXISTS connections (
                    id serial PRIMARY KEY,
                    user_id int8 NOT NULL,
                    connection_id int8 NOT NULL,
@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS Connections (
                    FOREIGN KEY (connection_id) REFERENCES Users (id) on delete cascade
 );
 
-DROP TABLE IF EXISTS Posts cascade;
-CREATE TABLE IF NOT EXISTS Posts (
+DROP TABLE IF EXISTS posts cascade;
+CREATE TABLE IF NOT EXISTS posts (
                   id serial PRIMARY KEY,
                   user_id int8 NOT NULL,
                   title VARCHAR ( 50 ) NOT NULL,
@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS Posts (
                   FOREIGN KEY (user_id) REFERENCES Users (id) on delete cascade
 );
 
-DROP TABLE IF EXISTS PostLikes;
-CREATE TABLE IF NOT EXISTS PostLikes (
+DROP TABLE IF EXISTS postLikes;
+CREATE TABLE IF NOT EXISTS postLikes (
                   id serial PRIMARY KEY,
                   user_id int8 NOT NULL,
                   post_id int8 NOT NULL,
@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS PostLikes (
                   FOREIGN KEY (post_id) REFERENCES Posts (id) on delete cascade
 );
 
-DROP TABLE IF EXISTS FavouritePosts;
-CREATE TABLE IF NOT EXISTS FavouritePosts (
+DROP TABLE IF EXISTS favouritePosts;
+CREATE TABLE IF NOT EXISTS favouritePosts (
                   id serial PRIMARY KEY,
                   user_id int8 NOT NULL,
                   post_id int8 NOT NULL,
@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS FavouritePosts (
                   FOREIGN KEY (post_id) REFERENCES Posts (id)
 );
 
-DROP TABLE IF EXISTS Comments cascade;
-CREATE TABLE IF NOT EXISTS Comments (
+DROP TABLE IF EXISTS comments cascade;
+CREATE TABLE IF NOT EXISTS comments (
                  id serial PRIMARY KEY,
                  user_id int8 NOT NULL,
                  post_id int8 NOT NULL,
@@ -62,11 +62,20 @@ CREATE TABLE IF NOT EXISTS Comments (
                  FOREIGN KEY (post_id) REFERENCES Posts (id) on delete cascade
 );
 
-DROP TABLE IF EXISTS CommentLikes;
-CREATE TABLE IF NOT EXISTS CommentLikes (
+DROP TABLE IF EXISTS commentLikes;
+CREATE TABLE IF NOT EXISTS commentLikes (
                  id serial PRIMARY KEY,
                  user_id int8 NOT NULL,
                  comment_id int8 NOT NULL,
                  FOREIGN KEY (user_id) REFERENCES Users (id) on delete cascade,
                  FOREIGN KEY (comment_id) REFERENCES Comments (id) on delete cascade
 );
+
+DROP TABLE IF EXISTS authorities;
+CREATE TABLE IF NOT EXISTS authorities (
+                   id serial PRIMARY KEY,
+                   username VARCHAR ( 50 ) NOT NULL,
+                   authority VARCHAR ( 50 ) NOT NULL,
+                   CONSTRAINT fk_authorities_users FOREIGN KEY (username) REFERENCES Users (username)
+);
+create unique index ix_auth_username on authorities (username, authority) ;

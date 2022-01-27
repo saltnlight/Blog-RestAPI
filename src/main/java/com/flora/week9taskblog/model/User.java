@@ -20,6 +20,6 @@ public class User {
     private String phone;
     private String password;
     private Time created_at;
-    private Boolean deactivated;
+    private Boolean enabled;
     private Timestamp deactivated_at;
 }

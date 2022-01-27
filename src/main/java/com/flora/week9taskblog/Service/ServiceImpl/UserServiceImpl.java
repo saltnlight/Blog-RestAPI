@@ -1,7 +1,6 @@
 package com.flora.week9taskblog.Service.ServiceImpl;
 
 import com.flora.week9taskblog.Payload.Response.PostResponse;
-import com.flora.week9taskblog.Payload.Response.StatusResponse;
 import com.flora.week9taskblog.Payload.Response.UserResponse;
 import com.flora.week9taskblog.Repository.PostRepository;
 import com.flora.week9taskblog.Repository.UserRepository;
@@ -82,15 +81,15 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity activateDeactivateAccount(String username) {
         Long id = userRepository.lookUpUserIdFromUsername(username);
         User user = userRepository.getUserById(id);
-        if (user.getDeactivated().equals(false)){
+        if (user.getEnabled().equals(true)){
             // deactivate user
-            user.setDeactivated(true);
+            user.setEnabled(false);
             user.setDeactivated_at(Timestamp.valueOf(LocalDateTime.now()));
             userRepository.saveUser(user);
             return new ResponseEntity("Your account has been deactivated", HttpStatus.OK);
         }
         // activate user
-        user.setDeactivated(false);
+        user.setEnabled(true);
         userRepository.saveUser(user);
         return new ResponseEntity("Your account has been activated", HttpStatus.OK);
     }
@@ -101,7 +100,7 @@ public class UserServiceImpl implements UserService {
     public void deleteAccount() {
         List<User> users = userRepository.getAllUsers();
         users.forEach(user->{
-            if (user.getDeactivated() &&  System.currentTimeMillis() - user.getDeactivated_at().getTime() >= 60 ){
+            if (!user.getEnabled() &&  System.currentTimeMillis() - user.getDeactivated_at().getTime() >= 60 ){
                 userRepository.deleteUserById(user.getId());
                 System.out.println("Deleted Successfully");
             }

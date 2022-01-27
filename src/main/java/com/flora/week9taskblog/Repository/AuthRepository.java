@@ -24,7 +24,7 @@ public class AuthRepository extends JdbcDaoSupport {
 
     public int registerUser(RegisterRequest registerRequest) {
         String sql = "INSERT INTO users " +
-                "(username, firstName, lastName, email, age, password, deactivated) " +
+                "(username, firstName, lastName, email, age, password, enabled) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)" ;
 
         int result = getJdbcTemplate().update(sql, registerRequest.getUsername(),registerRequest.getFirstName(),
@@ -37,6 +37,16 @@ public class AuthRepository extends JdbcDaoSupport {
     public User loginUser(LoginRequest loginRequest) {
         var sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         Object[] param = new Object[] {loginRequest.getUsername(), loginRequest.getPassword()};
+
+        assert getJdbcTemplate() != null;
+        return getJdbcTemplate().queryForObject(sql,
+                BeanPropertyRowMapper.newInstance(User.class),
+                param);
+    }
+
+    public User loadUserByUsername(String username) {
+        var sql = "SELECT * FROM users WHERE username = ?";
+        Object[] param = new Object[] {username};
 
         assert getJdbcTemplate() != null;
         return getJdbcTemplate().queryForObject(sql,
